@@ -31,25 +31,27 @@ def plotly_plot_trajectory(x, y, z, fig=None):
             yaxis = dict(nticks=4, range=[-LIM,LIM],),
             zaxis = dict(nticks=4, range=[-0, LIM/2],
             ),),
-        #width=700,
-        #margin=dict(r=20, l=10, b=10, t=10)
+        #width=1600,
+        margin=dict(r=0, l=0, b=0, t=0)
         )
     return fig
 
 def main():
-    st.title("Projectile Motion Simulator")
+    st.set_page_config(page_title="Flyrock Simulator", page_icon="💥")#, layout="wide")
+    st.title("Flyrock Simulator")
     # Select between one single shot or several random shots
-    options = ["Single Shot", "Random Shots"]
+    options = ["Random Multiple Shots", "Single Controlled Shot"]
     c1, c2 = st.columns([1,2])
     sel_choice = c1.radio("Select Mode", options)
     fig = go.Figure()
-    if sel_choice == "Single Shot":
-        c21, c22 = c2.columns(2)
+    c21, c22 = c2.columns(2)
+    if sel_choice == options[1]:
         initial_velocity = c21.slider("Initial Velocity (m/s)", min_value=0.9, max_value=1.1, value=1.0, step=0.01)
         angle = c22.slider("Launch Angle (degrees)", min_value=0, max_value=90, value=45, step=1)
         x, y, z = compute_trajectory(initial_velocity, angle)
         fig = plotly_plot_trajectory(x, y, z)
     else:
+        random = c21.button("Randomize")
         N = 10
         spacial_angle = np.linspace(0, 360*(N-1)/N, N)
         initial_velocity = [1 for i in range(N)] #np.random.randint(0, 90, N)
